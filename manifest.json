@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Pinterest Picture Downloader",
-  "description": "This extension will open Pinterest pictures in a new tab or download them to your PC",
-  "version": "1.1",
+  "name": "Pinterest Media Downloader",
+  "description": "This extension will open Pinterest pictures and videos in a new tab or download them to your PC",
+  "version": "2.0",
   "icons": {
     "128": "/assets/icon_128.png",
     "48": "/assets/icon_48.png",
