@@ -1,1 +1,1 @@
-# Pinterest-image-download-chrome-extension
+This is a simple extension that extends Pinterest's feature set by allowing the user to download images and videos. It allows you to view the image in full size in a new tab or to download it directly to your device.
