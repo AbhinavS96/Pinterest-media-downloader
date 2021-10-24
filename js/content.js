@@ -1,9 +1,13 @@
 chrome.runtime.sendMessage({ "todo": "showPageAction" });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	//check if this selector exists on the page. otherwise another selector has to be used
+	let selector = '[data-test-id=closeup-image] .zI7 img';
+	if(document.querySelectorAll(selector).length == 0)
+		selector = '[data-test-id=pin-closeup-image] .zI7 img';
 	//identify the largest image from the page. There could be two image links. The last one is usually the largest.
 	//does not work for videos
-	let imageArray = document.querySelectorAll('[data-test-id=closeup-image] .zI7 img');
+	let imageArray = document.querySelectorAll(selector);
 	//if image array is empty then the page has a video
 	if (imageArray.length == 0) {
 		//using the same name for the variable to reuse the code. Only one video will get picked and stored in an array of length 1
