@@ -30,8 +30,7 @@
     }
   ],
   "permissions": [
-    "tabs",
-    "https://*.pinterest.com/pin/"
+    "https://*.pinterest.com/*"
   ],
   "incognito": "split"
 }
