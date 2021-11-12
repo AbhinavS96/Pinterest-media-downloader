@@ -2,10 +2,10 @@ chrome.runtime.sendMessage({ "todo": "showPageAction" });
 
 //Array of selectors for detection
 const selectorJSON = {
-	'[data-test-id=closeup-image] .zI7 img':'mediaArray[mediaArray.length - 1].src',
-	'[data-test-id=pin-closeup-image] .zI7 img':'mediaArray[mediaArray.length - 1].src',
-	'#__PWS_DATA__':'let re = new RegExp("https:\/\/v\.pinimg\.com\/videos.*\.mp4"); re.exec(mediaArray[mediaArray.length - 1].innerText)[0].split(\'"\')[0]',
-	'div[role=img]':'mediaArray[mediaArray.length - 1].style.backgroundImage.slice(5, -2)'
+	'[data-test-id=closeup-image] .zI7 img':'image("[data-test-id=closeup-image] .zI7 img")',
+	'[data-test-id=pin-closeup-image] .zI7 img':'image("[data-test-id=pin-closeup-image] .zI7 img")',
+	'video': 'video("video")',
+	'div[role=img]':'backgroundImage("div[role=img]")'
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -20,20 +20,45 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	//store the array of images/videos
 	let mediaArray = document.querySelectorAll(selector);
 	//evaluate the code corresponding to the detected media
-	let mainImage = eval(selectorJSON[selector])
+	let mediaLink = eval(selectorJSON[selector])
 
 	//choose what to do depending on the button clicked
 	if (request.todo == "openNewTab") {
-		window.open(mainImage, '_blank');
+		window.open(mediaLink, '_blank');
 	}
 	//using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
 	else if (request.todo == "saveImage") {
 		let link = document.createElement('a');
 		link.href = '#';
 		link.target = '_blank';
-		link.download = mainImage;
+		link.download = mediaLink;
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
 	}
 })
+
+
+//function for images
+let image = function(selector){
+	let temp = document.querySelectorAll(selector)
+	return temp[temp.length-1].src
+}
+
+//function for background images
+let backgroundImage = function(selector){
+	let temp = document.querySelectorAll(selector)
+	return temp[temp.length-1].style.backgroundImage.slice(5, -2)
+}
+
+//function for videos
+let video = function(selector){
+	let temp = document.querySelectorAll(selector)
+	if(temp[temp.length-1].src.indexOf('blob:') > -1){
+		console.log(temp)
+		let re = new RegExp("https:\/\/v\.pinimg\.com\/videos.*\.mp4");
+		temp = document.querySelectorAll('#__PWS_DATA__')
+		return re.exec(temp[temp.length - 1].innerText)[0].split('/')[0]
+	}
+	return temp[temp.length-1].src
+}
