@@ -5,10 +5,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	const data = JSON.parse(document.querySelector('#__PWS_DATA__').innerText)
 
 	let storyKey = Object.keys(data.props.initialReduxState.storyPins)[0]
-	let stories = data.props.initialReduxState.storyPins[storyKey].pages[0].blocks
+	let pages = data.props.initialReduxState.storyPins[storyKey].pages
 
-	stories.forEach(story => {
-		console.log(story.video.video_list.V_EXP3.url)
+	pages.forEach(page => {
+		console.log(page.blocks[0].image.images.originals.url)
 	});
 	
 	if (request.todo == "openNewTab") {
