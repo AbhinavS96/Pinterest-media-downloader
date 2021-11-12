@@ -54,11 +54,12 @@ let backgroundImage = function(selector){
 //function for videos
 let video = function(selector){
 	let temp = document.querySelectorAll(selector)
+	console.log(temp)
 	if(temp[temp.length-1].src.indexOf('blob:') > -1){
-		console.log(temp)
 		let re = new RegExp("https:\/\/v\.pinimg\.com\/videos.*\.mp4");
 		temp = document.querySelectorAll('#__PWS_DATA__')
-		return re.exec(temp[temp.length - 1].innerText)[0].split('/')[0]
+		console.log(re.exec(temp[temp.length - 1].innerText)[0].split('"')[0])
+		return re.exec(temp[temp.length - 1].innerText)[0].split('"')[0]
 	}
 	return temp[temp.length-1].src
 }
