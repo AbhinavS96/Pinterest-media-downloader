@@ -19,9 +19,15 @@ let mediaArray = () => {
 		pages.forEach(page => {
 			let image = page.blocks[0].image;
 			if(image)
-				console.log(image.images.originals.url)
+				response.push({
+					"url": image.images.originals.url,
+					"type": "image"
+				})
 			else
-				console.log(page.blocks[0].video.video_list.V_EXP3.url)
+				response.push({
+					"url": page.blocks[0].video.video_list.V_EXP3.url,
+					"type": "video"
+				})
 		});
 	}
 	else{
@@ -32,13 +38,18 @@ let mediaArray = () => {
 		//check if this is a video
 		if(pins.videos){
 			let videoKey = Object.keys(pins.videos.video_list)[0]
-			console.log(pins.videos.video_list[videoKey].url)
+			response.push({
+				"url": pins.videos.video_list[videoKey].url,
+				"type": "video"
+			})
 		}
 		else{
-			console.log(pins.images.orig.url)
+			response.push({
+				"url": pins.images.orig.url,
+				"type": "image"
+			})
 		}
 	}
-	response.push({'a':'a'})
 	return response
 }
 

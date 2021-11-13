@@ -1,16 +1,10 @@
-// var pinURL;
-// let button = document.querySelector('#newTabButton');
-// if(button){
-// 	button.addEventListener('click', ()=>{
-// 		window.open(pinURL);
-// 		console.log("yes");
-// 	})
-// }
-// else{
-// 	console.log("failed")
-// }
 
 window.onload = () =>{
+	chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
+		chrome.tabs.sendMessage(tabs[0].id,	{todo: "getData"}, (res) => {
+			console.log(res[0])
+		})
+	})
 	document.getElementById('newTabButton').addEventListener("click", ()=>{
 		chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
 			chrome.tabs.sendMessage(tabs[0].id,	{todo: "openNewTab"})
@@ -23,3 +17,4 @@ window.onload = () =>{
 		})
 	})
 }
+
