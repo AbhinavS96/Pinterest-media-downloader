@@ -1,14 +1,17 @@
 chrome.runtime.sendMessage({ "todo": "showPageAction" });
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//function that would parse the meta json and return an array of media objects
+let mediaArray = () => {
+	let response = []	
 	
+	//get the meta JSON
 	const data = JSON.parse(document.querySelector('#__PWS_DATA__').innerText)
 
 	//get the first key out from storypins. This is hard to guess
 	let storyKey = Object.keys(data.props.initialReduxState.storyPins)[0]
 	let storyPins = data.props.initialReduxState.storyPins
 	//check if the page has stories. Otherwise it is a single pic or video
-	if(storyPins[storyKey]){ console.log('test')
+	if(storyPins[storyKey]){
 		//get pages as an array 
 		let pages = storyPins[storyKey].pages
 
@@ -35,8 +38,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			console.log(pins.images.orig.url)
 		}
 	}
-	
-	if (request.todo == "openNewTab") {
+	response.push({'a':'a'})
+	return response
+}
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	//decide what to do based on the message
+	if(request.todo == 'getData'){
+		sendResponse(mediaArray())
+	}
+	else if (request.todo == "openNewTab") {
 		window.open(mediaLink, '_blank');
 	}
 	//using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
