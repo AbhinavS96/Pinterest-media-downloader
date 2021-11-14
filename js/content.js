@@ -58,31 +58,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	if(request.todo == 'getData'){
 		sendResponse(mediaArray())
 	}
-	//using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
 	else if (request.todo == "saveImage") {
-		// let link = document.createElement('a');
-		// // link.href = request.imageURL;
-		// // link.download = '';
-		// // link.target = '_blank'
-		// link.setAttribute('href', 
-		// 'data:text/plain;charset=utf-8, '
-		// + encodeURIComponent(request.imageURL))
-		// let name = request.imageURL.split('/')[request.imageURL.split('/').length-1]
-		// console.log(name)
-		// link.setAttribute('download', name);
-		// document.body.appendChild(link);
-		// link.click();
-		// //document.body.removeChild(link);
-
+		//async function to read the image stream and then save it. Doesn't work otherwise. 
+		//video support is untested
 		downloadImage(request.imageURL)
 	}
 })
 
+//function to download the image. not tested for videos.
 async function downloadImage(imageSrc) {
 	const image = await fetch(imageSrc)
 	const imageBlog = await image.blob()
 	const imageURL = URL.createObjectURL(imageBlog)
-  
+	
+	//using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
 	const link = document.createElement('a')
 	link.href = imageURL
 	link.download = 'image file name here'
