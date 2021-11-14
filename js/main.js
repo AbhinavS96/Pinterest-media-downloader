@@ -8,7 +8,7 @@ window.onload = () =>{
 				let li = document.createElement("li")
 				let button = document.createElement("button")
 				let img = document.createElement("img")
-				img.src = element.url
+				img.src = element.imageURL
 				img.classList = "image"
 				button.innerText = "Download " + element.type
 				button.classList = "btn btn-outline-danger"
@@ -18,12 +18,20 @@ window.onload = () =>{
 				li.appendChild(button)
 				document.getElementById("downloads").appendChild(li)
 			});
+			// add event listeners to the buttons
+			document.querySelectorAll('#downloads button').forEach((button, index) => {
+				button.addEventListener("click", ()=>{
+					chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
+						chrome.tabs.sendMessage(tabs[0].id,	{todo: "saveImage", "imageURL": res[index].imageURL})
+					})
+				})
+			})
 		})
 	})
-
+	//for the save all button
 	document.getElementById('saveButton').addEventListener("click", ()=>{
 		chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
-			chrome.tabs.sendMessage(tabs[0].id,	{todo: "saveImage"})
+			chrome.tabs.sendMessage(tabs[0].id,	{todo: "saveAllImages"})
 		})
 	})
 }

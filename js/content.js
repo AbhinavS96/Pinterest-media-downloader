@@ -20,12 +20,12 @@ let mediaArray = () => {
 			let image = page.blocks[0].image;
 			if(image)
 				response.push({
-					"url": image.images.originals.url,
+					"imageURL": image.images.originals.url,
 					"type": "image"
 				})
 			else
 				response.push({
-					"url": page.blocks[0].video.video_list.V_EXP3.url,
+					"imageURL": page.blocks[0].video.video_list.V_EXP3.url,
 					"type": "video"
 				})
 		});
@@ -39,13 +39,13 @@ let mediaArray = () => {
 		if(pins.videos){
 			let videoKey = Object.keys(pins.videos.video_list)[0]
 			response.push({
-				"url": pins.videos.video_list[videoKey].url,
+				"imageURL": pins.videos.video_list[videoKey].url,
 				"type": "video"
 			})
 		}
 		else{
 			response.push({
-				"url": pins.images.orig.url,
+				"imageURL": pins.images.orig.url,
 				"type": "image"
 			})
 		}
@@ -58,17 +58,35 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	if(request.todo == 'getData'){
 		sendResponse(mediaArray())
 	}
-	else if (request.todo == "openNewTab") {
-		window.open(mediaLink, '_blank');
-	}
 	//using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
 	else if (request.todo == "saveImage") {
-		let link = document.createElement('a');
-		link.href = '#';
-		link.target = '_blank';
-		link.download = mediaLink;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+		// let link = document.createElement('a');
+		// // link.href = request.imageURL;
+		// // link.download = '';
+		// // link.target = '_blank'
+		// link.setAttribute('href', 
+		// 'data:text/plain;charset=utf-8, '
+		// + encodeURIComponent(request.imageURL))
+		// let name = request.imageURL.split('/')[request.imageURL.split('/').length-1]
+		// console.log(name)
+		// link.setAttribute('download', name);
+		// document.body.appendChild(link);
+		// link.click();
+		// //document.body.removeChild(link);
+
+		downloadImage(request.imageURL)
 	}
 })
+
+async function downloadImage(imageSrc) {
+	const image = await fetch(imageSrc)
+	const imageBlog = await image.blob()
+	const imageURL = URL.createObjectURL(imageBlog)
+  
+	const link = document.createElement('a')
+	link.href = imageURL
+	link.download = 'image file name here'
+	document.body.appendChild(link)
+	link.click()
+	document.body.removeChild(link)
+  }
