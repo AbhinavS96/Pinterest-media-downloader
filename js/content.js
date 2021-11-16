@@ -1,65 +1,91 @@
 chrome.runtime.sendMessage({ "todo": "showPageAction" });
 
-//Array of selectors for detection
-const selectorJSON = {
-	'[data-test-id=closeup-image] .zI7 img':'image("[data-test-id=closeup-image] .zI7 img")',
-	'[data-test-id=pin-closeup-image] .zI7 img':'image("[data-test-id=pin-closeup-image] .zI7 img")',
-	'video': 'video("video")',
-	'div[role=img]':'backgroundImage("div[role=img]")'
+//needed to reload the script on page navigation
+document.addEventListener("click", function(e) {
+    e.stopPropagation();
+}, true);
+
+//function that would parse the meta json and return an array of media objects
+let mediaArray = () => {
+	let response = []	
+	
+	//get the meta JSON
+	const data = JSON.parse(document.querySelector('#__PWS_DATA__').innerText)
+
+	//get the first key out from storypins. This is hard to guess
+	let storyKey = Object.keys(data.props.initialReduxState.storyPins)[0]
+	let storyPins = data.props.initialReduxState.storyPins
+	//check if the page has stories. Otherwise it is a single pic or video
+	if(storyPins[storyKey]){
+		//get pages as an array 
+		let pages = storyPins[storyKey].pages
+
+		//loop over pages and get all the images or videos
+		pages.forEach(page => {
+			let image = page.blocks[0].image;
+			if(image)
+				response.push({
+					"imageURL": image.images.originals.url,
+					"type": "image",
+					"downloadURL": image.images.originals.url
+				})
+			else
+				response.push({
+					"imageURL": page.blocks[0].video.video_list.V_EXP3.thumbnail,
+					"type": "video",
+					"downloadURL": page.blocks[0].video.video_list.V_EXP3.url
+				})
+		});
+	}
+	else{
+		//take a similar approach as in the if condition
+		let pinsKey = Object.keys(data.props.initialReduxState.pins)[0]
+		let pins = data.props.initialReduxState.pins[pinsKey]
+
+		//check if this is a video
+		if(pins.videos){
+			let videoKey = Object.keys(pins.videos.video_list)[0]
+			response.push({
+				"imageURL": pins.images.orig.url,
+				"type": "video",
+				"downloadURL": pins.videos.video_list[videoKey].url
+			})
+		}
+		else{
+			response.push({
+				"imageURL": pins.images.orig.url,
+				"type": "image",
+				"downloadURL": pins.images.orig.url
+			})
+		}
+	}
+	return response
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-	
-	let selector = ""
-	//try and check which selector would match
-	Object.keys(selectorJSON).forEach(sel =>{
-		if(document.querySelectorAll(sel).length > 0)
-			selector = sel
-	})
-
-	//store the array of images/videos
-	let mediaArray = document.querySelectorAll(selector);
-	//evaluate the code corresponding to the detected media
-	let mediaLink = eval(selectorJSON[selector])
-
-	//choose what to do depending on the button clicked
-	if (request.todo == "openNewTab") {
-		window.open(mediaLink, '_blank');
+	//decide what to do based on the message
+	if(request.todo == 'getData'){
+		if(window.location.href.indexOf('/pin/') >= 0)
+			sendResponse(mediaArray())
+		else
+			sendResponse([])
 	}
-	//using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
 	else if (request.todo == "saveImage") {
-		let link = document.createElement('a');
-		link.href = '#';
-		link.target = '_blank';
-		link.download = mediaLink;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+		downloadImage(request.downloadURL)
 	}
 })
 
-
-//function for images
-let image = function(selector){
-	let temp = document.querySelectorAll(selector)
-	return temp[temp.length-1].src
-}
-
-//function for background images
-let backgroundImage = function(selector){
-	let temp = document.querySelectorAll(selector)
-	return temp[temp.length-1].style.backgroundImage.slice(5, -2)
-}
-
-//function for videos
-let video = function(selector){
-	let temp = document.querySelectorAll(selector)
-	console.log(temp)
-	if(temp[temp.length-1].src.indexOf('blob:') > -1){
-		let re = new RegExp("https:\/\/v\.pinimg\.com\/videos.*\.mp4");
-		temp = document.querySelectorAll('#__PWS_DATA__')
-		console.log(re.exec(temp[temp.length - 1].innerText)[0].split('"')[0])
-		return re.exec(temp[temp.length - 1].innerText)[0].split('"')[0]
-	}
-	return temp[temp.length-1].src
-}
+//function to download the media
+async function downloadImage(imageSrc) {
+	const image = await fetch(imageSrc)
+	const imageBlog = await image.blob()
+	const imageURL = URL.createObjectURL(imageBlog)
+	
+	//using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
+	const link = document.createElement('a')
+	link.href = imageURL
+	link.download = ''//imageSrc.split('/')[imageSrc.split('/').length-1]
+	document.body.appendChild(link)
+	link.click()
+	document.body.removeChild(link)
+  }

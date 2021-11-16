@@ -1,6 +1,6 @@
 .container{
 	text-align: center;
-	min-width:350px;
+	min-width:400px;
 	height: auto;
 	padding: 10px;
 	font-family: Helvetica, Arial, sans-serif;
@@ -17,4 +17,24 @@
 #mainHeading{
 	color:white;
 	font-weight: bold;
+}
+
+.image{
+	width:150px;
+	height: 150px;
+	object-fit: scale-down;
+}
+
+li{
+	list-style: none;
+	padding: 10px;
+}
+
+ul{
+	padding: 0px;
+}
+
+.scroll{
+	max-height: 425px;
+	overflow-y: scroll;
 }
