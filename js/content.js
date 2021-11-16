@@ -65,28 +65,17 @@ let mediaArray = () => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	//decide what to do based on the message
 	if(request.todo == 'getData'){
-		sendResponse(mediaArray())
+		if(window.location.href.indexOf('/pin/') >= 0)
+			sendResponse(mediaArray())
+		else
+			sendResponse([])
 	}
 	else if (request.todo == "saveImage") {
-		//async function to read the image stream and then save it. Doesn't work otherwise. 
-		//video support is untested
-		console.log(request)
-		//if(request.type == 'image')
-			downloadImage(request.downloadURL)
-		// else{
-		// 	const link = document.createElement('a')
-		// 	link.href = request.downloadURL
-		// 	console.log(link.href)
-		// 	link.download = 'sample.mp4'
-		// 	document.body.appendChild(link)
-		// 	link.click()
-		// 	document.body.removeChild(link)
-		// }
+		downloadImage(request.downloadURL)
 	}
 })
 
-//function to download the image. not tested for videos.
-//works in console but not here?
+//function to download the media
 async function downloadImage(imageSrc) {
 	const image = await fetch(imageSrc)
 	const imageBlog = await image.blob()
@@ -95,10 +84,8 @@ async function downloadImage(imageSrc) {
 	//using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
 	const link = document.createElement('a')
 	link.href = imageURL
-	link.download = 'a.mp4'
-	link.innerText = "aaaa"
+	link.download = ''//imageSrc.split('/')[imageSrc.split('/').length-1]
 	document.body.appendChild(link)
 	link.click()
-	console.log('click')
 	document.body.removeChild(link)
   }
