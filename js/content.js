@@ -1,5 +1,10 @@
 chrome.runtime.sendMessage({ "todo": "showPageAction" });
 
+//needed to reload the script on page navigation
+document.addEventListener("click", function(e) {
+    e.stopPropagation();
+}, true);
+
 //function that would parse the meta json and return an array of media objects
 let mediaArray = () => {
 	let response = []	
@@ -21,12 +26,14 @@ let mediaArray = () => {
 			if(image)
 				response.push({
 					"imageURL": image.images.originals.url,
-					"type": "image"
+					"type": "image",
+					"downloadURL": image.images.originals.url
 				})
 			else
 				response.push({
-					"imageURL": page.blocks[0].video.video_list.V_EXP3.url,
-					"type": "video"
+					"imageURL": page.blocks[0].video.video_list.V_EXP3.thumbnail,
+					"type": "video",
+					"downloadURL": page.blocks[0].video.video_list.V_EXP3.url
 				})
 		});
 	}
@@ -39,14 +46,16 @@ let mediaArray = () => {
 		if(pins.videos){
 			let videoKey = Object.keys(pins.videos.video_list)[0]
 			response.push({
-				"imageURL": pins.videos.video_list[videoKey].url,
-				"type": "video"
+				"imageURL": pins.images.orig.url,
+				"type": "video",
+				"downloadURL": pins.videos.video_list[videoKey].url
 			})
 		}
 		else{
 			response.push({
 				"imageURL": pins.images.orig.url,
-				"type": "image"
+				"type": "image",
+				"downloadURL": pins.images.orig.url
 			})
 		}
 	}
@@ -61,11 +70,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	else if (request.todo == "saveImage") {
 		//async function to read the image stream and then save it. Doesn't work otherwise. 
 		//video support is untested
-		downloadImage(request.imageURL)
+		console.log(request)
+		//if(request.type == 'image')
+			downloadImage(request.downloadURL)
+		// else{
+		// 	const link = document.createElement('a')
+		// 	link.href = request.downloadURL
+		// 	console.log(link.href)
+		// 	link.download = 'sample.mp4'
+		// 	document.body.appendChild(link)
+		// 	link.click()
+		// 	document.body.removeChild(link)
+		// }
 	}
 })
 
 //function to download the image. not tested for videos.
+//works in console but not here?
 async function downloadImage(imageSrc) {
 	const image = await fetch(imageSrc)
 	const imageBlog = await image.blob()
@@ -74,8 +95,10 @@ async function downloadImage(imageSrc) {
 	//using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
 	const link = document.createElement('a')
 	link.href = imageURL
-	link.download = 'image file name here'
+	link.download = 'a.mp4'
+	link.innerText = "aaaa"
 	document.body.appendChild(link)
 	link.click()
+	console.log('click')
 	document.body.removeChild(link)
   }
