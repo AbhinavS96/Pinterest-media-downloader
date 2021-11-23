@@ -29,6 +29,15 @@ chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
 					})
 				})
 			});
+			//for the save all button
+			document.getElementById('saveButton').addEventListener("click", ()=>{
+				chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
+					chrome.tabs.sendMessage(tabs[0].id,	{
+						todo: "saveAllImages",
+						downloadURLs: res.map(i => i.downloadURL)
+					})
+				})
+			})
 		}
 		else{
 			//remove the download container just for visual appeal
@@ -36,10 +45,3 @@ chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
 		}
 	})
 })
-//for the save all button
-// document.getElementById('saveButton').addEventListener("click", ()=>{
-// 	chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
-// 		chrome.tabs.sendMessage(tabs[0].id,	{todo: "saveAllImages"})
-// 	})
-// })
-
