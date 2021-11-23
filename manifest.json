@@ -89,7 +89,9 @@
         "*://*.pinterest.com.mx/*"
       ],
       "js": [
-        "/js/content.js"
+        "/js/content.js",
+        "/js/jszip.min.js",
+        "/js/FileSaver.min.js"
       ],
       "run_at": "document_end"
     }

@@ -73,19 +73,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	else if (request.todo == "saveImage") {
 		downloadImage(request.downloadURL)
 	}
+	else if(request.todo == "saveAllImages")
+		downloadAllImages(request.downloadURLs)
 })
 
 //function to download the media
 async function downloadImage(imageSrc) {
 	const image = await fetch(imageSrc)
-	const imageBlog = await image.blob()
-	const imageURL = URL.createObjectURL(imageBlog)
+	const imageBlob = await image.blob()
+	const imageURL = URL.createObjectURL(imageBlob)
 	
 	//using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
 	const link = document.createElement('a')
 	link.href = imageURL
-	link.download = ''//imageSrc.split('/')[imageSrc.split('/').length-1]
+	link.download = imageSrc.split('/')[imageSrc.split('/').length-1]
 	document.body.appendChild(link)
 	link.click()
 	document.body.removeChild(link)
   }
+
+async function downloadAllImages(imageArray) {
+	let zip = new JSZip()
+	for(const i of imageArray){
+		const image = await fetch(i)
+		const imageBlob = await image.blob()
+		console.log(imageBlob)
+		const imageFile = new File([imageBlob], i.split('/')[i.split('/').length-1]);
+		console.log(imageFile, imageArray)
+		zip.file(i.split('/')[i.split('/').length-1], imageFile);
+	}
+	zip.generateAsync({ type: "blob" }).then(content => saveAs(content, "pinterest"));
+}
