@@ -12,7 +12,7 @@ chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
 				img.classList = "image"
 				button.innerText = "Download " + element.type
 				button.classList = "btn btn-outline-danger"
-				let text = document.createTextNode((index+1).toString())
+				let text = document.createTextNode((index+1).toString()+'.')
 				li.appendChild(text)
 				li.appendChild(img)
 				li.appendChild(button)
@@ -30,18 +30,24 @@ chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
 				})
 			});
 			//for the save all button
-			document.getElementById('saveButton').addEventListener("click", ()=>{
-				chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
-					chrome.tabs.sendMessage(tabs[0].id,	{
-						todo: "saveAllImages",
-						downloadURLs: res.map(i => i.downloadURL)
+			if(res.length == 1){
+				document.querySelector('#downloadAllContainer').remove()
+			}
+			else{
+				document.getElementById('saveButton').addEventListener("click", ()=>{
+					chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
+						chrome.tabs.sendMessage(tabs[0].id,	{
+							todo: "saveAllImages",
+							downloadURLs: res.map(i => i.downloadURL)
+						})
 					})
 				})
-			})
+			}
 		}
 		else{
 			//remove the download container just for visual appeal
 			document.querySelector('#downloadContainer').remove()
+			document.querySelector('#downloadAllContainer').remove()
 		}
 	})
 })
