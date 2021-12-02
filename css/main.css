@@ -23,6 +23,7 @@
 	width:150px;
 	height: 150px;
 	object-fit: scale-down;
+	margin: 0 10px;
 }
 
 li{
