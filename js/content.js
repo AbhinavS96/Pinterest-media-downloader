@@ -78,7 +78,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 		downloadImage(request.downloadURL, request.index)
 	}
 	else if(request.todo == "saveAllImages")
-		downloadAllImages(request.downloadURLs)
+		downloadAllImages(request.downloadURLs, request.index)
 })
 
 //function to download the media
@@ -98,7 +98,8 @@ async function downloadImage(imageSrc, index) {
 	downloadStatus(false, index)
   }
 
-async function downloadAllImages(imageArray) {
+async function downloadAllImages(imageArray, index) {
+	downloadStatus(true, index)
 	let zip = new JSZip()
 	for(const i of imageArray){
 		const image = await fetch(i)
@@ -108,5 +109,5 @@ async function downloadAllImages(imageArray) {
 		console.log(imageFile, imageArray)
 		zip.file(i.split('/')[i.split('/').length-1], imageFile);
 	}
-	zip.generateAsync({ type: "blob" }).then(content => saveAs(content, "pinterest"));
+	zip.generateAsync({ type: "blob" }).then(content => saveAs(content, "pinterest")).finally(() => downloadStatus(false, index));
 }

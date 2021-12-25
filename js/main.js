@@ -39,7 +39,8 @@ chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
 					chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
 						chrome.tabs.sendMessage(tabs[0].id,	{
 							todo: "saveAllImages",
-							downloadURLs: res.map(i => i.downloadURL)
+							downloadURLs: res.map(i => i.downloadURL),
+							index: res.length
 						})
 					})
 				})
