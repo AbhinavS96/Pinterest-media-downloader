@@ -24,7 +24,8 @@ chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
 						chrome.tabs.sendMessage(tabs[0].id,	{
 							todo: "saveImage", 
 							downloadURL: res[index].downloadURL,
-							type: res[index].type
+							type: res[index].type,
+							index: index
 						})
 					})
 				})
@@ -50,4 +51,14 @@ chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
 			document.querySelector('#downloadAllContainer').remove()
 		}
 	})
+})
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	//decide what to do based on the message
+	if(request.download){
+		document.querySelectorAll('button')[request.index].setAttribute('disabled', true)
+	}
+	else{
+		document.querySelectorAll('button')[request.index].removeAttribute('disabled')
+	}
 })

@@ -62,6 +62,10 @@ let mediaArray = () => {
 	return response
 }
 
+function downloadStatus(status, index) {
+    chrome.runtime.sendMessage({"download": status, "index":index});
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	//decide what to do based on the message
 	if(request.todo == 'getData'){
@@ -71,14 +75,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			sendResponse([])
 	}
 	else if (request.todo == "saveImage") {
-		downloadImage(request.downloadURL)
+		downloadImage(request.downloadURL, request.index)
 	}
 	else if(request.todo == "saveAllImages")
 		downloadAllImages(request.downloadURLs)
 })
 
 //function to download the media
-async function downloadImage(imageSrc) {
+async function downloadImage(imageSrc, index) {
+	downloadStatus(true, index)
 	const image = await fetch(imageSrc)
 	const imageBlob = await image.blob()
 	const imageURL = URL.createObjectURL(imageBlob)
@@ -90,6 +95,7 @@ async function downloadImage(imageSrc) {
 	document.body.appendChild(link)
 	link.click()
 	document.body.removeChild(link)
+	downloadStatus(false, index)
   }
 
 async function downloadAllImages(imageArray) {
