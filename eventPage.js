@@ -7,5 +7,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse)=>{
 });
 
 chrome.tabs.query({active:true, currentWindow:true}, (tabs)=>{
-	chrome.action.enable(tabs[0].id);
+	chrome.action.disable();
 });

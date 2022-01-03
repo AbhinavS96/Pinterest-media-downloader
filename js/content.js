@@ -104,9 +104,7 @@ async function downloadAllImages(imageArray, index) {
 	for(const i of imageArray){
 		const image = await fetch(i)
 		const imageBlob = await image.blob()
-		console.log(imageBlob)
 		const imageFile = new File([imageBlob], i.split('/')[i.split('/').length-1]);
-		console.log(imageFile, imageArray)
 		zip.file(i.split('/')[i.split('/').length-1], imageFile);
 	}
 	zip.generateAsync({ type: "blob" }).then(content => saveAs(content, "pinterest")).finally(() => downloadStatus(false, index));
