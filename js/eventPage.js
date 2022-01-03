@@ -4,6 +4,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse)=>{
 			chrome.action.show(tabs[0].id);
 		})
 	}
-})
-
-	
+});

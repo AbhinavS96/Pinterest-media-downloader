@@ -9,12 +9,14 @@
     "16": "/assets/icon_16.png"
   },
   "action": {
-    "default_icon": "/assets/icon_16.png",
+    "default_icon": {
+      "16": "/assets/icon_16.png"
+    },
     "default_popup": "index.html",
     "default_title": "Pinterest Video and Image Downloader"
   },
   "background": {
-    "service_worker": "/js/eventPage.js"
+    "service_worker": "eventPage.js"
   },
   "content_scripts": [
     {
