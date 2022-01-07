@@ -1,55 +1,78 @@
-.container{
-	text-align: center;
-	min-width:400px;
-	height: auto;
-	padding: 10px;
-	font-family: Helvetica, Arial, sans-serif;
+.container {
+  text-align: center;
+  min-width: 400px;
+  height: auto;
+  padding: 10px;
+  font-family: Helvetica, Arial, sans-serif;
 }
 
-.navbar .container{
-	justify-content: flex-start;
+.navbar .container {
+  justify-content: flex-start;
 }
 
-.logo{
-	width:60px;
-	height:60px;
+.logo {
+  width: 60px;
+  height: 60px;
 }
-#mainHeading{
-	color:white;
-	font-weight: bold;
-}
-
-.image{
-	width:150px;
-	height: 150px;
-	object-fit: scale-down;
-	margin: 0 10px;
+#mainHeading {
+  color: white;
+  font-weight: bold;
 }
 
-li{
-	list-style: none;
-	padding: 5px;
-	margin: 5px 0 5px 0;
-    background: white;
-    box-shadow: 1px 1px 5px #cfcfcf;
-	border-radius: 5px;
+.image {
+  width: 150px;
+  height: 150px;
+  object-fit: scale-down;
+  margin: 0 10px;
 }
 
-ul{
-	padding: 0px;
-	margin: 0px;
+li {
+  list-style: none;
+  padding: 5px;
+  margin: 5px 0 5px 0;
+  background: white;
+  box-shadow: 1px 1px 5px #cfcfcf;
+  border-radius: 5px;
 }
 
-.scroll{
-	max-height: 425px;
-	overflow-y: scroll;
-    padding: 0 5px 0 0;
+ul {
+  padding: 0px;
+  margin: 0px;
 }
 
-#downloadContainer{
-	padding: 0 10px 0 10px;
+.scroll {
+  max-height: 425px;
+  overflow-y: scroll;
+  padding: 0 5px 0 0;
 }
 
-#downloadAllContainer{
-	border-top: 2px solid #f6f6f6;
+#downloadContainer {
+  padding: 0 10px 0 10px;
+}
+
+#downloadAllContainer {
+  border-top: 2px solid #f6f6f6;
+}
+
+.loader {
+  border: 4px solid rgba(220, 53, 69, 0.5);
+  border-top: 4px solid rgba(220, 53, 69, 1);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#saveButton {
+  width: 92;
+  height: 38;
 }
