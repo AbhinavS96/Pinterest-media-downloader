@@ -10,7 +10,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         let img = document.createElement("img");
         img.src = element.imageURL;
         img.classList = "image";
-        button.innerText = "Download " + element.type;
+        button.textContent = "Download " + element.type;
         button.classList = "btn btn-outline-danger";
         let text = document.createTextNode((index + 1).toString() + ".");
         li.appendChild(text);

@@ -86,13 +86,8 @@ async function downloadImage(imageSrc, index) {
   const imageBlob = await image.blob();
   const imageURL = URL.createObjectURL(imageBlob);
 
-  //using a hack to save the image. A link element for saving is added and clicked. Then it is removed.
-  const link = document.createElement("a");
-  link.href = imageURL;
-  link.download = imageSrc.split("/")[imageSrc.split("/").length - 1];
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  //moving away from hack save and using the js library.
+  saveAs(imageBlob, imageSrc.split("/")[imageSrc.split("/").length - 1]);
   downloadStatus(false, index);
 }
 
