@@ -1,8 +1,9 @@
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   chrome.tabs.sendMessage(tabs[0].id, { todo: "getData" }, (res) => {
     if (res.length > 0) {
-      //remove the error message
-      document.querySelector("#errorMessage").remove();
+      //hide the error message
+      document.querySelector("#errorMessage").hidden = true;
+
       //create the download elements
       res.forEach((element, index) => {
         let li = document.createElement("li");
@@ -30,9 +31,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           });
         });
       });
+
       //for the save all button
       if (res.length == 1) {
-        document.querySelector("#downloadAllContainer").remove();
+        document.querySelector("#downloadAllContainer").hidden = true;
       } else {
         document.getElementById("saveButton").addEventListener("click", () => {
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -46,14 +48,14 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       }
     } else {
       //remove the download container just for visual appeal
-      document.querySelector("#downloadContainer").remove();
-      document.querySelector("#downloadAllContainer").remove();
+      document.querySelector("#downloadContainer").hidden = true;
+      document.querySelector("#downloadAllContainer").hidden = true;
     }
   });
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  //decide what to do based on the message
+  //enable or disable the button based on the status of the download returned
   if (request.download) {
     document
       .querySelectorAll("button")

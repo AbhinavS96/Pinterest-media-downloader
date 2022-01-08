@@ -3,7 +3,7 @@ chrome.runtime.sendMessage({ todo: "showPageAction" });
 //needed to reload the script on page navigation
 document.addEventListener(
   "click",
-  function (e) {
+  (e) => {
     e.stopPropagation();
   },
   true
@@ -64,9 +64,9 @@ const mediaArray = () => {
   return response;
 };
 
-function downloadStatus(status, index) {
+const setDownloadStatus = (status, index) => {
   chrome.runtime.sendMessage({ download: status, index: index });
-}
+};
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //decide what to do based on the message
@@ -80,19 +80,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 //function to download the media
-async function downloadImage(imageSrc, index) {
-  downloadStatus(true, index);
+const downloadImage = async (imageSrc, index) => {
+  setDownloadStatus(true, index);
   const image = await fetch(imageSrc);
   const imageBlob = await image.blob();
-  const imageURL = URL.createObjectURL(imageBlob);
-
   //moving away from hack save and using the js library.
   saveAs(imageBlob, imageSrc.split("/")[imageSrc.split("/").length - 1]);
-  downloadStatus(false, index);
-}
+  setDownloadStatus(false, index);
+};
 
-async function downloadAllImages(imageArray, index) {
-  downloadStatus(true, index);
+//using js zip library to zip and download the media
+const downloadAllImages = async (imageArray, index) => {
+  setDownloadStatus(true, index);
   let zip = new JSZip();
   for (const i of imageArray) {
     const image = await fetch(i);
@@ -106,5 +105,5 @@ async function downloadAllImages(imageArray, index) {
   zip
     .generateAsync({ type: "blob" })
     .then((content) => saveAs(content, "pinterest"))
-    .finally(() => downloadStatus(false, index));
-}
+    .finally(() => setDownloadStatus(false, index));
+};
