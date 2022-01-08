@@ -64,15 +64,37 @@ const pinMediaArray = () => {
   return response;
 };
 
+//function to get all images on a collection page -beta
+const collectionMediaArray = () => {
+  let response = [];
+  console.log("working");
+  return response;
+};
+
 const setDownloadStatus = (status, index) => {
   chrome.runtime.sendMessage({ download: status, index: index });
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  //conditions to identify page type
+  const pinPageCondition = () => window.location.href.indexOf("/pin/") >= 0;
+  const collectionPageCondition = () => {
+    try {
+      return (
+        JSON.parse(
+          document.querySelector('script[type="application/ld+json"]')
+            .textContent
+        ).mainEntityOfPage["@type"] === "CollectionPage"
+      );
+    } catch (e) {
+      return false;
+    }
+  };
+
   //decide what to do based on the message
   if (request.todo == "getData") {
-    if (window.location.href.indexOf("/pin/") >= 0)
-      sendResponse(pinMediaArray());
+    if (pinPageCondition()) sendResponse(pinMediaArray());
+    else if (collectionPageCondition()) sendResponse(collectionMediaArray());
     else sendResponse([]);
   } else if (request.todo == "saveImage") {
     downloadImage(request.downloadURL, request.index);
