@@ -9,8 +9,8 @@ document.addEventListener(
   true
 );
 
-//function that would parse the meta json and return an array of media objects
-const mediaArray = () => {
+//function that would parse the meta json and return an array of media objects on a pin page
+const pinMediaArray = () => {
   let response = [];
 
   //get the meta JSON
@@ -71,7 +71,8 @@ const setDownloadStatus = (status, index) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //decide what to do based on the message
   if (request.todo == "getData") {
-    if (window.location.href.indexOf("/pin/") >= 0) sendResponse(mediaArray());
+    if (window.location.href.indexOf("/pin/") >= 0)
+      sendResponse(pinMediaArray());
     else sendResponse([]);
   } else if (request.todo == "saveImage") {
     downloadImage(request.downloadURL, request.index);
