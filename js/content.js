@@ -81,10 +81,14 @@ const collectionMediaArray = () => {
   ].data.forEach((item) => {
     if (item.videos) {
       const videoKey = Object.keys(item.videos.video_list)[0];
+      //video URL needs to be changed for it to work. need to figure out a better workaround.
+      //for now, making an assumption that the 720p version will be available
+      let newURL = item.videos.video_list[videoKey].url.split("/hls/");
+      newURL = newURL[0] + "/720p/" + newURL[1].split(".m3u8")[0] + ".mp4";
       response.push({
         imageURL: item.videos.video_list[videoKey].thumbnail,
         type: "video",
-        downloadURL: item.videos.video_list[videoKey].url,
+        downloadURL: newURL,
       });
     } else if (item.story_pin_data) {
       item.story_pin_data.pages.forEach((page) => {
