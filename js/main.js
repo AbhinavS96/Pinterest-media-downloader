@@ -11,7 +11,13 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         let img = document.createElement("img");
         img.src = element.imageURL;
         img.classList = "image";
-        button.textContent = "Download " + element.type;
+        let span = document.createElement("span");
+        span.textContent = "Download " + element.type;
+        let loader = document.createElement("div");
+        loader.classList = "loader";
+        loader.setAttribute("hidden", "true");
+        button.appendChild(span);
+        button.appendChild(loader);
         button.classList = "btn btn-outline-danger";
         let text = document.createTextNode((index + 1).toString() + ".");
         li.appendChild(text);
@@ -60,13 +66,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     document
       .querySelectorAll("button")
       [request.index].setAttribute("disabled", true);
-    document.querySelector(".loader").hidden = false;
-    document.querySelector("#button_text").hidden = true;
+    document
+      .querySelectorAll("button")
+      [request.index].querySelector(".loader").hidden = false;
+    document
+      .querySelectorAll("button")
+      [request.index].querySelector("span").hidden = true;
   } else {
     document
       .querySelectorAll("button")
       [request.index].removeAttribute("disabled");
-    document.querySelector(".loader").hidden = true;
-    document.querySelector("#button_text").hidden = false;
+    document
+      .querySelectorAll("button")
+      [request.index].querySelector(".loader").hidden = true;
+    document
+      .querySelectorAll("button")
+      [request.index].querySelector("span").hidden = false;
   }
 });
