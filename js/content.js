@@ -67,7 +67,29 @@ const pinMediaArray = () => {
 //function to get all images on a collection page -beta
 const collectionMediaArray = () => {
   let response = [];
-  console.log("working");
+  //get the meta JSON
+  const data = JSON.parse(document.querySelector("#__PWS_DATA__").textContent);
+  //data.props.initialReduxState.feeds[0]
+
+  //saving the key separately as it cannot be guessed
+  const feedKey = Object.keys(
+    data.props.initialReduxState.resources.BoardFeedResource
+  );
+
+  data.props.initialReduxState.resources.BoardFeedResource[
+    feedKey
+  ].data.forEach((item) => {
+    if (item.videos) {
+      let videoKey = Object.keys(item.videos.video_list)[0];
+      console.log(videoKey);
+      response.push({
+        imageURL: item.videos.video_list[videoKey].thumbnail,
+        type: "video",
+        downloadURL: item.videos.video_list[videoKey].url,
+      });
+    }
+  });
+
   return response;
 };
 
