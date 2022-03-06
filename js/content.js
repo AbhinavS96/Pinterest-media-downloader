@@ -1,17 +1,18 @@
 chrome.runtime.sendMessage({ todo: "showPageAction" });
 
 //needed to reload the script on page navigation
-// document.addEventListener(
-//   "click",
-//   (e) => {
-//     e.stopPropagation();
-//   },
-//   true
-// );
+document.addEventListener(
+  "click",
+  (e) => {
+    //stop propogation only if the click was on an <a> tag
+    if (e.target.closest("a")) e.stopPropagation();
+  },
+  true
+);
 
 //function that would parse the meta json and return an array of media objects on a pin page
 const pinMediaArray = () => {
-  let response = [];
+  let response = ["test"];
 
   //get the meta JSON
   const data = JSON.parse(document.querySelector("#__PWS_DATA__").textContent);
