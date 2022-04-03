@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Pinterest Video and Image Downloader",
   "description": "This extension will help you download Pinterest pictures and videos to your PC",
-  "version": "5.2",
+  "version": "5.2.1",
   "icons": {
     "128": "/assets/icon_128.png",
     "48": "/assets/icon_48.png",
