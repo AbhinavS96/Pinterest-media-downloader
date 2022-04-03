@@ -11,6 +11,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         let img = document.createElement("img");
         img.src = element.imageURL;
         img.classList = "image";
+        img.loading = "lazy";
         let span = document.createElement("span");
         span.textContent = "Download " + element.type;
         let loader = document.createElement("div");
