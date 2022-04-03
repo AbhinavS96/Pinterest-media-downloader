@@ -6,21 +6,21 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
       //create the download elements
       res.forEach((element, index) => {
-        let li = document.createElement("li");
-        let button = document.createElement("button");
-        let img = document.createElement("img");
+        const li = document.createElement("li");
+        const button = document.createElement("button");
+        const img = document.createElement("img");
         img.src = element.imageURL;
         img.classList = "image";
         img.loading = "lazy";
-        let span = document.createElement("span");
+        const span = document.createElement("span");
         span.textContent = "Download " + element.type;
-        let loader = document.createElement("div");
+        const loader = document.createElement("div");
         loader.classList = "loader";
         loader.setAttribute("hidden", "true");
         button.appendChild(span);
         button.appendChild(loader);
         button.classList = "btn btn-outline-danger";
-        let text = document.createTextNode((index + 1).toString() + ".");
+        const text = document.createTextNode((index + 1).toString() + ".");
         li.appendChild(text);
         li.appendChild(img);
         li.appendChild(button);
