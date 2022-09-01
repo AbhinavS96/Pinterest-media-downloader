@@ -12,19 +12,20 @@ document.addEventListener(
 
 //function that would parse the meta json and return an array of media objects on a pin page
 const pinMediaArray = () => {
-  let response = ["test"];
+  let response = [];
 
   //get the meta JSON
   const data = JSON.parse(document.querySelector("#__PWS_DATA__").textContent);
 
-  //get the first key out from storypins. This is hard to guess
-  const storyKey = Object.keys(data.props.initialReduxState.storyPins)[0];
-  const storyPins = data.props.initialReduxState.storyPins;
   //check if the page has stories. Otherwise it is a single pic or video
-  if (storyPins[storyKey]) {
+  //looks like this has become old. will have to be removed while refactoring.
+  if (data.props.initialReduxState.storyPins) {
+    //get the first key out from storypins. This is hard to guess
+    const storyKey = Object.keys(data.props.initialReduxState.storyPins)[0];
+    const storyPins = data.props.initialReduxState.storyPins;
+
     //get pages as an array
     const pages = storyPins[storyKey].pages;
-
     //loop over pages and get all the images or videos
     pages.forEach((page) => {
       const image = page.blocks[0].image;
@@ -46,15 +47,33 @@ const pinMediaArray = () => {
     const pinsKey = Object.keys(data.props.initialReduxState.pins)[0];
     const pins = data.props.initialReduxState.pins[pinsKey];
 
-    //check if this is a video
-    if (pins.videos) {
+    //check if this is a story
+    if (pins.story_pin_data) {
+      pins.story_pin_data.pages.forEach((page) => {
+        if (page.blocks[0].type === "story_pin_video_block") {
+          response.push({
+            imageURL: page.blocks[0].video.video_list.V_EXP3.thumbnail,
+            type: "video",
+            downloadURL: page.blocks[0].video.video_list.V_EXP3.url,
+          });
+        } else if (page.blocks[0].type === "story_pin_image_block") {
+          response.push({
+            imageURL: page.blocks[0].image.images.originals.url,
+            type: "image",
+            downloadURL: page.blocks[0].image.images.originals.url,
+          });
+        }
+      });
+    }
+    // check if this is a video
+    else if (pins.videos) {
       const videoKey = Object.keys(pins.videos.video_list)[0];
       response.push({
         imageURL: pins.images.orig.url,
         type: "video",
         downloadURL: pins.videos.video_list[videoKey].url,
       });
-    } else {
+    } else if (pins.images) {
       response.push({
         imageURL: pins.images.orig.url,
         type: "image",
