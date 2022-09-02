@@ -18,68 +18,41 @@ const pinMediaArray = () => {
   const data = JSON.parse(document.querySelector("#__PWS_DATA__").textContent);
 
   //check if the page has stories. Otherwise it is a single pic or video
-  //looks like this has become old. will have to be removed while refactoring.
-  if (data.props.initialReduxState.storyPins) {
-    //get the first key out from storypins. This is hard to guess
-    const storyKey = Object.keys(data.props.initialReduxState.storyPins)[0];
-    const storyPins = data.props.initialReduxState.storyPins;
+  const pinsKey = Object.keys(data.props.initialReduxState.pins)[0];
+  const pins = data.props.initialReduxState.pins[pinsKey];
 
-    //get pages as an array
-    const pages = storyPins[storyKey].pages;
-    //loop over pages and get all the images or videos
-    pages.forEach((page) => {
-      const image = page.blocks[0].image;
-      if (image)
-        response.push({
-          imageURL: image.images.originals.url,
-          type: "image",
-          downloadURL: image.images.originals.url,
-        });
-      else
+  //check if this is a story. It can have images and videos inside.
+  if (pins.story_pin_data) {
+    pins.story_pin_data.pages.forEach((page) => {
+      if (page.blocks[0].type === "story_pin_video_block") {
         response.push({
           imageURL: page.blocks[0].video.video_list.V_EXP3.thumbnail,
           type: "video",
           downloadURL: page.blocks[0].video.video_list.V_EXP3.url,
         });
+      } else if (page.blocks[0].type === "story_pin_image_block") {
+        response.push({
+          imageURL: page.blocks[0].image.images.originals.url,
+          type: "image",
+          downloadURL: page.blocks[0].image.images.originals.url,
+        });
+      }
     });
-  } else {
-    //take a similar approach as in the if condition
-    const pinsKey = Object.keys(data.props.initialReduxState.pins)[0];
-    const pins = data.props.initialReduxState.pins[pinsKey];
-
-    //check if this is a story
-    if (pins.story_pin_data) {
-      pins.story_pin_data.pages.forEach((page) => {
-        if (page.blocks[0].type === "story_pin_video_block") {
-          response.push({
-            imageURL: page.blocks[0].video.video_list.V_EXP3.thumbnail,
-            type: "video",
-            downloadURL: page.blocks[0].video.video_list.V_EXP3.url,
-          });
-        } else if (page.blocks[0].type === "story_pin_image_block") {
-          response.push({
-            imageURL: page.blocks[0].image.images.originals.url,
-            type: "image",
-            downloadURL: page.blocks[0].image.images.originals.url,
-          });
-        }
-      });
-    }
-    // check if this is a video
-    else if (pins.videos) {
-      const videoKey = Object.keys(pins.videos.video_list)[0];
-      response.push({
-        imageURL: pins.images.orig.url,
-        type: "video",
-        downloadURL: pins.videos.video_list[videoKey].url,
-      });
-    } else if (pins.images) {
-      response.push({
-        imageURL: pins.images.orig.url,
-        type: "image",
-        downloadURL: pins.images.orig.url,
-      });
-    }
+  }
+  // check if this is a video
+  else if (pins.videos) {
+    const videoKey = Object.keys(pins.videos.video_list)[0];
+    response.push({
+      imageURL: pins.images.orig.url,
+      type: "video",
+      downloadURL: pins.videos.video_list[videoKey].url,
+    });
+  } else if (pins.images) {
+    response.push({
+      imageURL: pins.images.orig.url,
+      type: "image",
+      downloadURL: pins.images.orig.url,
+    });
   }
   return response;
 };
