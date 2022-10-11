@@ -5,11 +5,12 @@
   "main": "gulpfile.js",
   "dependencies": {
     "del": "^5.1.0",
-    "gulp": "^4.0.2",
     "gulp-merge-json": "^2.1.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "gulp --config PROD",
+    "dev": "gulp --watch"
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,11 @@
   "bugs": {
     "url": "https://github.com/AbhinavS96/Pinterest-image-download-chrome-extension/issues"
   },
-  "homepage": "https://github.com/AbhinavS96/Pinterest-image-download-chrome-extension#readme"
+  "homepage": "https://github.com/AbhinavS96/Pinterest-image-download-chrome-extension#readme",
+  "devDependencies": {
+    "@types/chrome": "^0.0.197",
+    "gulp": "^4.0.2",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "typescript": "^4.8.4"
+  }
 }
