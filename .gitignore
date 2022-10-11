@@ -1,0 +1,4 @@
+node_modules
+dist
+src/scripts/config.js
+config.PROD.json
