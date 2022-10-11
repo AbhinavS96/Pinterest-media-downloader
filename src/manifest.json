@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Pinterest Video and Image Downloader",
+  "name": "Pinterest Video and Image Downloader - DEV",
   "description": "This extension will help you download Pinterest pictures and videos to your PC",
-  "version": "5.3.1",
+  "version": "5.4",
   "icons": {
     "128": "/assets/icon_128.png",
     "48": "/assets/icon_48.png",
@@ -87,7 +87,11 @@
         "*://*.pinterest.com.ve/*",
         "*://*.pinterest.com.mx/*"
       ],
-      "js": ["/js/content.js", "/js/jszip.min.js", "/js/FileSaver.min.js"],
+      "js": [
+        "/scripts/content.js",
+        "/scripts/jszip.min.js",
+        "/scripts/FileSaver.min.js"
+      ],
       "run_at": "document_end"
     }
   ],
