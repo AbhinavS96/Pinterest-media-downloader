@@ -2,6 +2,6 @@
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "noImplicitAny": true,
-    "target": "es6"
+    "target": "ES2017"
   }
 }
