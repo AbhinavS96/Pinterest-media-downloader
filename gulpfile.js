@@ -9,6 +9,8 @@ const fs = require("fs");
 //for typescript
 var ts = require("gulp-typescript");
 var tsProject = ts.createProject("tsconfig.json");
+//for minifying js
+const uglify = require("gulp-uglify");
 
 //Reading the command-line argument called config. If it is not present, the default value is DEV.
 const argv = require("yargs").argv;
@@ -95,7 +97,11 @@ function watch(cb) {
 }
 
 function compileTypescript() {
-  return tsProject.src().pipe(tsProject()).js.pipe(gulp.dest("dist/"));
+  return tsProject
+    .src()
+    .pipe(tsProject())
+    .js.pipe(uglify())
+    .pipe(gulp.dest("dist/"));
 }
 
 // order in which the functions are run
