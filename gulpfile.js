@@ -11,6 +11,7 @@ var ts = require("gulp-typescript");
 var tsProject = ts.createProject("tsconfig.json");
 //for minifying js
 const uglify = require("gulp-uglify");
+var cssMinify = require("gulp-css-minify");
 
 //Reading the command-line argument called config. If it is not present, the default value is DEV.
 const argv = require("yargs").argv;
@@ -28,6 +29,7 @@ function copyAllFiles() {
       "src/**/*.*",
       "!src/config*.json",
       "!src/manifest*.json",
+      "!src/css/*.*",
       "!src/**/*.ts",
     ])
     .pipe(gulp.dest("./dist/"));
@@ -87,6 +89,7 @@ function watch(cb) {
   return gulp.watch(
     ["src/**/*.*", "!src/scripts/config.js"],
     gulp.series(
+      compileCSS,
       compileTypescript,
       copyAllFiles,
       transformConfig,
@@ -104,9 +107,17 @@ function compileTypescript() {
     .pipe(gulp.dest("dist/"));
 }
 
+function compileCSS() {
+  return gulp
+    .src("./src/css/**/*.css")
+    .pipe(cssMinify())
+    .pipe(gulp.dest("./dist/css/"));
+}
+
 // order in which the functions are run
 exports.default = gulp.series(
   clean,
+  compileCSS,
   compileTypescript,
   copyAllFiles,
   transformConfig,
