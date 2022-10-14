@@ -1,0 +1,7 @@
+{
+  "exclude": ["node_modules", "dist"],
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "target": "ES2017"
+  }
+}

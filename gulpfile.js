@@ -6,6 +6,9 @@ const del = require("del");
 const merge = require("gulp-merge-json");
 //to read and write files
 const fs = require("fs");
+//for typescript
+var ts = require("gulp-typescript");
+var tsProject = ts.createProject("tsconfig.json");
 
 //Reading the command-line argument called config. If it is not present, the default value is DEV.
 const argv = require("yargs").argv;
@@ -19,7 +22,12 @@ function clean() {
 //moves files from src to dist
 function copyAllFiles() {
   return gulp
-    .src(["src/**/*.*", "!src/config*.json", "!src/manifest*.json"])
+    .src([
+      "src/**/*.*",
+      "!src/config*.json",
+      "!src/manifest*.json",
+      "!src/**/*.ts",
+    ])
     .pipe(gulp.dest("./dist/"));
 }
 
@@ -77,6 +85,7 @@ function watch(cb) {
   return gulp.watch(
     ["src/**/*.*", "!src/scripts/config.js"],
     gulp.series(
+      compileTypescript,
       copyAllFiles,
       transformConfig,
       writeConfigJsFile,
@@ -85,9 +94,14 @@ function watch(cb) {
   );
 }
 
+function compileTypescript() {
+  return tsProject.src().pipe(tsProject()).js.pipe(gulp.dest("dist/"));
+}
+
 // order in which the functions are run
 exports.default = gulp.series(
   clean,
+  compileTypescript,
   copyAllFiles,
   transformConfig,
   writeConfigJsFile,

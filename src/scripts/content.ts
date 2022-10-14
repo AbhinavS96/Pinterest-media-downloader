@@ -5,14 +5,22 @@ document.addEventListener(
   "click",
   (e) => {
     //stop propogation only if the click was on an <a> tag
-    if (e.target.closest("a")) e.stopPropagation();
+    if ((e.target as Element).closest("a")) e.stopPropagation();
   },
   true
 );
 
+//defining the type for the response globally for now to access in the next two functions
+type DownloadResponse =
+  | {
+      imageURL: string;
+      type: string;
+      downloadURL: string;
+    }[];
+
 //function that would parse the meta json and return an array of media objects on a pin page
 const pinMediaArray = () => {
-  let response = [];
+  let response: DownloadResponse = [];
 
   //get the meta JSON
   const data = JSON.parse(document.querySelector("#__PWS_DATA__").textContent);
@@ -23,12 +31,12 @@ const pinMediaArray = () => {
 
   //check if this is a story. It can have images and videos inside.
   if (pins.story_pin_data) {
-    pins.story_pin_data.pages.forEach((page) => {
+    pins.story_pin_data.pages.forEach((page: any) => {
       if (page.blocks[0].type === "story_pin_video_block") {
         response.push({
-          imageURL: page.blocks[0].video.video_list.V_EXP3.thumbnail,
+          imageURL: page.blocks[0].video.video_list.V_EXP3.thumbnail as string,
           type: "video",
-          downloadURL: page.blocks[0].video.video_list.V_EXP3.url,
+          downloadURL: page.blocks[0].video.video_list.V_EXP3.url as string,
         });
       } else if (page.blocks[0].type === "story_pin_image_block") {
         response.push({
@@ -59,7 +67,7 @@ const pinMediaArray = () => {
 
 //function to get all images on a collection page -beta
 const collectionMediaArray = () => {
-  let response = [];
+  let response: DownloadResponse = [];
   //get the meta JSON
   const data = JSON.parse(document.querySelector("#__PWS_DATA__").textContent);
   //data.props.initialReduxState.feeds[0]
@@ -67,11 +75,11 @@ const collectionMediaArray = () => {
   //saving the key separately as it cannot be guessed
   const feedKey = Object.keys(
     data.props.initialReduxState.resources.BoardFeedResource
-  );
+  )[0];
 
   data.props.initialReduxState.resources.BoardFeedResource[
     feedKey
-  ].data.forEach((item) => {
+  ].data.forEach((item: any) => {
     if (item.videos) {
       const videoKey = Object.keys(item.videos.video_list)[0];
       //video URL needs to be changed for it to work. need to figure out a better workaround.
@@ -84,7 +92,7 @@ const collectionMediaArray = () => {
         downloadURL: newURL,
       });
     } else if (item.story_pin_data) {
-      item.story_pin_data.pages.forEach((page) => {
+      item.story_pin_data.pages.forEach((page: any) => {
         const image = page.blocks[0].image;
         if (image)
           response.push({
@@ -111,7 +119,7 @@ const collectionMediaArray = () => {
   return response;
 };
 
-const setDownloadStatus = (status, index) => {
+const setDownloadStatus = (status: boolean, index: number) => {
   chrome.runtime.sendMessage({ download: status, index: index });
 };
 
@@ -143,18 +151,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 //function to download the media
-const downloadImage = async (imageSrc, index) => {
+const downloadImage = async (imageSrc: string, index: number) => {
   setDownloadStatus(true, index);
   const image = await fetch(imageSrc);
   const imageBlob = await image.blob();
-  //moving away from hack save and using the js library.
+  //@ts-ignore: Cannot find name error
   saveAs(imageBlob, imageSrc.split("/")[imageSrc.split("/").length - 1]);
   setDownloadStatus(false, index);
 };
 
 //using js zip library to zip and download the media
-const downloadAllImages = async (imageArray, index) => {
+const downloadAllImages = async (imageArray: string[], index: number) => {
   setDownloadStatus(true, index);
+  //@ts-ignore: Cannot find name error
   let zip = new JSZip();
   for (const i of imageArray) {
     const image = await fetch(i);
@@ -167,6 +176,7 @@ const downloadAllImages = async (imageArray, index) => {
   }
   zip
     .generateAsync({ type: "blob" })
-    .then((content) => saveAs(content, "pinterest"))
+    //@ts-ignore: Cannot find name error
+    .then((content: any) => saveAs(content, "pinterest"))
     .finally(() => setDownloadStatus(false, index));
 };
