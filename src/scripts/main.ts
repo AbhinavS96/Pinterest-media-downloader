@@ -13,6 +13,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       //create the download elements
       res.forEach((element: DownloadResponse, index: number) => {
         const li = document.createElement("li");
+        const liWrapper = document.createElement("div");
+        liWrapper.classList.value = "li-wrapper";
         const button = document.createElement("button");
         const img = document.createElement("img");
         img.src = element.imageURL;
@@ -25,11 +27,12 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         loader.setAttribute("hidden", "true");
         button.appendChild(span);
         button.appendChild(loader);
-        button.classList.value = "btn btn-outline-danger";
+        button.classList.value = "btn";
         const text = document.createTextNode((index + 1).toString() + ".");
-        li.appendChild(text);
-        li.appendChild(img);
-        li.appendChild(button);
+        liWrapper.appendChild(text);
+        liWrapper.appendChild(img);
+        liWrapper.appendChild(button);
+        li.appendChild(liWrapper);
 
         // add event listeners to the buttons
         document.getElementById("downloads").appendChild(li);

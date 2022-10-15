@@ -82,6 +82,21 @@ function writeConfigJsFile(cb) {
   return cb();
 }
 
+function compileTypescript() {
+  return tsProject
+    .src()
+    .pipe(tsProject())
+    .js.pipe(uglify())
+    .pipe(gulp.dest("dist/"));
+}
+
+function compileCSS() {
+  return gulp
+    .src("./src/css/**/*.css")
+    .pipe(cssMinify())
+    .pipe(gulp.dest("./dist/css/"));
+}
+
 //Watches for any change in the src folder and automatically repeat the previous steps.
 function watch(cb) {
   if (argv.watch == undefined) return cb();
@@ -97,21 +112,6 @@ function watch(cb) {
       transformManifest
     )
   );
-}
-
-function compileTypescript() {
-  return tsProject
-    .src()
-    .pipe(tsProject())
-    .js.pipe(uglify())
-    .pipe(gulp.dest("dist/"));
-}
-
-function compileCSS() {
-  return gulp
-    .src("./src/css/**/*.css")
-    .pipe(cssMinify())
-    .pipe(gulp.dest("./dist/css/"));
 }
 
 // order in which the functions are run
