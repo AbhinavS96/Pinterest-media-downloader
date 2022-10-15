@@ -9,6 +9,9 @@ const fs = require("fs");
 //for typescript
 var ts = require("gulp-typescript");
 var tsProject = ts.createProject("tsconfig.json");
+//for minifying js
+const uglify = require("gulp-uglify");
+var cssMinify = require("gulp-css-minify");
 
 //Reading the command-line argument called config. If it is not present, the default value is DEV.
 const argv = require("yargs").argv;
@@ -26,6 +29,7 @@ function copyAllFiles() {
       "src/**/*.*",
       "!src/config*.json",
       "!src/manifest*.json",
+      "!src/css/*.*",
       "!src/**/*.ts",
     ])
     .pipe(gulp.dest("./dist/"));
@@ -78,6 +82,21 @@ function writeConfigJsFile(cb) {
   return cb();
 }
 
+function compileTypescript() {
+  return tsProject
+    .src()
+    .pipe(tsProject())
+    .js.pipe(uglify())
+    .pipe(gulp.dest("dist/"));
+}
+
+function compileCSS() {
+  return gulp
+    .src("./src/css/**/*.css")
+    .pipe(cssMinify())
+    .pipe(gulp.dest("./dist/css/"));
+}
+
 //Watches for any change in the src folder and automatically repeat the previous steps.
 function watch(cb) {
   if (argv.watch == undefined) return cb();
@@ -85,6 +104,7 @@ function watch(cb) {
   return gulp.watch(
     ["src/**/*.*", "!src/scripts/config.js"],
     gulp.series(
+      compileCSS,
       compileTypescript,
       copyAllFiles,
       transformConfig,
@@ -94,13 +114,10 @@ function watch(cb) {
   );
 }
 
-function compileTypescript() {
-  return tsProject.src().pipe(tsProject()).js.pipe(gulp.dest("dist/"));
-}
-
 // order in which the functions are run
 exports.default = gulp.series(
   clean,
+  compileCSS,
   compileTypescript,
   copyAllFiles,
   transformConfig,

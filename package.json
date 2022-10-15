@@ -5,7 +5,9 @@
   "main": "gulpfile.js",
   "dependencies": {
     "del": "^5.1.0",
-    "gulp-merge-json": "^2.1.0"
+    "gulp-css-minify": "^0.9.2",
+    "gulp-merge-json": "^2.1.0",
+    "gulp-uglify": "^3.0.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
