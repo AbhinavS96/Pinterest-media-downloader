@@ -23,7 +23,14 @@ function clean() {
 }
 
 //moves files from src to dist
+function copyLocales() {
+  return gulp
+    .src(["_locales/**/*.*"], { base: "." })
+    .pipe(gulp.dest("./dist/"));
+}
+
 function copyAllFiles() {
+  copyLocales();
   return gulp
     .src([
       "src/**/*.*",
@@ -104,6 +111,7 @@ function watch(cb) {
   return gulp.watch(
     ["src/**/*.*", "!src/scripts/config.js"],
     gulp.series(
+      clean,
       compileCSS,
       compileTypescript,
       copyAllFiles,

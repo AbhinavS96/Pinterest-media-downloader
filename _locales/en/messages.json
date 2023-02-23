@@ -1,0 +1,10 @@
+{
+  "default_title": {
+    "message": "Pinterest Video and Image Downloader - DEV",
+    "description": "The title of the extension to be used in manifest.json"
+  },
+  "default_description": {
+    "message": "Test",
+    "description": "The description of the extension to be used in manifest.json"
+  }
+}
