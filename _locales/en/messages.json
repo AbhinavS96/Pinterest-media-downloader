@@ -1,10 +1,30 @@
 {
   "default_title": {
-    "message": "Pinterest Video and Image Downloader - DEV",
+    "message": "Pinterest Video and Image Downloader",
     "description": "The title of the extension to be used in manifest.json"
   },
   "default_description": {
     "message": "This extension will help you download Pinterest pictures and videos to your PC",
     "description": "The description of the extension to be used in manifest.json"
+  },
+  "title_tag": {
+    "message": "Pinterest Video and Image Downloader",
+    "description": "The title of the extension to be used in index.html"
+  },
+  "h1_tag": {
+    "message": "Save Pinterest Media",
+    "description": "The h1 of the extension to be used in index.html"
+  },
+  "error_message": {
+    "message": "Only works on pin and collection pages!",
+    "description": "The default error message to be used in index.html"
+  },
+  "download_all": {
+    "message": "Download All",
+    "description": "The download all button text to be used in index.html"
+  },
+  "download": {
+    "message": "Download",
+    "description": "The download text for buttons"
   }
 }

@@ -14,7 +14,7 @@
       "16": "/assets/icon_16.png"
     },
     "default_popup": "index.html",
-    "default_title": "Pinterest Video and Image Downloader"
+    "default_title": "__MSG_default_title__"
   },
   "background": {
     "service_worker": "eventPage.js"

@@ -2,17 +2,28 @@ import config from "./config.js";
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   chrome.tabs.sendMessage(tabs[0].id, { todo: "getData" }, (res) => {
+    //Initial setup of localized text
+    (document.querySelector("title") as HTMLTitleElement).textContent =
+      chrome.i18n.getMessage("title_tag");
+    (
+      document.querySelector("#main-heading") as HTMLHeadingElement
+    ).textContent = chrome.i18n.getMessage("h1_tag");
+    (
+      document.querySelector("#errorMessage .error-wrapper") as HTMLDivElement
+    ).textContent = chrome.i18n.getMessage("error_message");
+    (
+      document.querySelector("#saveButton span") as HTMLSpanElement
+    ).textContent = chrome.i18n.getMessage("download_all");
+
     if (res.length > 0) {
       //hide the error message
-      (document.querySelector("#errorMessage") as HTMLElement).hidden = true;
+      (document.querySelector("#errorMessage") as HTMLDivElement).hidden = true;
 
       type DownloadResponse = {
         imageURL: string;
         type: string;
         downloadURL: string;
       };
-
-      console.log(config);
 
       //create the download elements
       res.forEach((element: DownloadResponse, index: number) => {
@@ -25,7 +36,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         img.classList.value = "image";
         img.loading = "lazy";
         const span = document.createElement("span");
-        span.textContent = "Download " + element.type;
+        //text content is generated based on the type of the data.
+        span.textContent = chrome.i18n.getMessage("download");
         const loader = document.createElement("div");
         loader.classList.value = "loader";
         loader.setAttribute("hidden", "true");
