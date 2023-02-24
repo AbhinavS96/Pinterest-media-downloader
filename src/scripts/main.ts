@@ -1,3 +1,5 @@
+import config from "./config.js";
+
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   chrome.tabs.sendMessage(tabs[0].id, { todo: "getData" }, (res) => {
     if (res.length > 0) {
@@ -9,6 +11,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         type: string;
         downloadURL: string;
       };
+
+      console.log(config);
 
       //create the download elements
       res.forEach((element: DownloadResponse, index: number) => {
