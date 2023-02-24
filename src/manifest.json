@@ -1,19 +1,20 @@
 {
   "manifest_version": 3,
-  "name": "Pinterest Video and Image Downloader - DEV",
-  "description": "This extension will help you download Pinterest pictures and videos to your PC",
-  "version": "6.0.1",
+  "name": "__MSG_default_title__",
+  "description": "__MSG_default_description__",
+  "version": "6.1.0",
   "icons": {
     "128": "/assets/icon_128.png",
     "48": "/assets/icon_48.png",
     "16": "/assets/icon_16.png"
   },
+  "default_locale": "en",
   "action": {
     "default_icon": {
       "16": "/assets/icon_16.png"
     },
     "default_popup": "index.html",
-    "default_title": "Pinterest Video and Image Downloader"
+    "default_title": "__MSG_default_title__"
   },
   "background": {
     "service_worker": "eventPage.js"
